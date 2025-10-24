@@ -211,7 +211,7 @@ def clear_queue():
 
 
 # === Scheduled Jobs ===
-scheduler.add_job(check_for_new_files, trigger="interval", hours=48)
+scheduler.add_job(check_for_new_files, trigger="interval", hours=4)
 scheduler.add_job(check_and_remove_torrents, trigger="interval", hours=1)
 scheduler.add_job(clear_queue, trigger="interval", minutes=10)
 
