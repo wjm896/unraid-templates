@@ -162,10 +162,6 @@ def check_and_remove_torrents():
             continue
 
         files = tdata.get(b'files', [])
-        active_time = tdata.get(b'active_time', 0)
-        if active_time > 7200:
-            client.call('core.remove_torrent', tid, True)
-            continue
         for f in files:
             fname = f.get(b'path', b'').decode('utf-8', errors='ignore')
             if any(fname.endswith(ext) for ext in unwanted_exts):
