@@ -201,7 +201,7 @@ def clear_queue():
     for item in queue.get("records", queue):
         status = item.get("status", "").lower()
         tracked = item.get("trackedDownloadStatus", "").lower()
-        if any(k in status for k in ("failed", "warning")) or tracked in ("manual", "importfailed"):
+        if any(k in status for k in ("failed", "warning")) or tracked in ("manual", "importfailed", "warning"):
             if parse_age(item) >= SONARR_MIN_AGE:
                 failed.append(item["id"])
 
