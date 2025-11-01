@@ -1,11 +1,12 @@
-from flask import Flask, request, jsonify, render_template_string, redirect, url_for
-from apscheduler.schedulers.background import BackgroundScheduler
-import os
-import shutil
 import difflib
 import json
-import requests
+import os
+import shutil
 from datetime import datetime, timezone
+
+import requests
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask import Flask, request, render_template_string, redirect, url_for
 
 try:
     from deluge_client import DelugeRPCClient
@@ -32,6 +33,9 @@ DELUGE_PASS = os.getenv("DELUGE_PASS", "")
 SONARR_URL = os.getenv("SONARR_URL", "http://localhost:8989")
 SONARR_API_KEY = os.getenv("SONARR_API_KEY", "")
 SONARR_MIN_AGE = int(os.getenv("SONARR_MIN_AGE", "120"))
+
+# Sonarr + Radarr
+LABEL_ALLOWLIST = os.getenv("LABEL_ALLOWLIST", "").split(",")
 
 VIDEO_EXTENSIONS = ('.mp4', '.mkv', '.avi')
 
@@ -158,7 +162,7 @@ def check_and_remove_torrents():
 
     for tid, tdata in torrents.items():
         label = tdata.get(b'label', b'').decode('utf-8', errors='ignore')
-        if label.lower() != "tv-sonarr":
+        if LABEL_ALLOWLIST and label not in LABEL_ALLOWLIST:
             continue
 
         files = tdata.get(b'files', [])
